@@ -35,7 +35,7 @@ extern int getLineNumber();
 
 %token TOKEN_ERROR
 
-%left '<' '>' OPERATOR_LE OPERATOR_GE  OPERATOR_EQ OPERATOR_DIF
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '+' '-'
 %left '*' '/'
 
@@ -69,7 +69,7 @@ literais : literal literais
          |
          ;
 
-declaracao_funcao : tipo TK_IDENTIFIER '(' parametros_formais ')' bloco ';'
+declaracao_funcao : tipo TK_IDENTIFIER '(' parametros_formais ')' ';'
                  ;
 
 parametros_formais : parametro_formal parametros_formais_fim
@@ -88,15 +88,11 @@ lista_codigo : KW_CODE TK_IDENTIFIER bloco lista_codigo
             ;
 
 bloco : '{' lista_comandos '}' 
-      |
       ;
 
-lista_comandos : comando lista_comandos_fim
+lista_comandos : comando lista_comandos
+              |
               ;
-
-lista_comandos_fim : ';'
-                  | comando lista_comandos_fim
-                  ;
 
 comando : comando_vazio
         | comando_atribuicao
