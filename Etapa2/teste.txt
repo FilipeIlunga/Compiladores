@@ -1,0 +1,45 @@
+cha7r  int if
+char  else
+
+code  
+'c'
+'CHAR'
+'d'
+' '
+''
+_id_15.9211
+id_17.99999
+_7Id0_
+7_iD00
+id_7
+id__04
+"Ola "\ mundo"
+____struct____
+____S7rUc7____
+-19900a5
++2bc5
+-3bcde5
+22.4
+"string"
+"string com 9901. teste! \"\n\" \n " ""
+5_+3=_8
+_5 + 3 = 8
+isso"eh "teste
+.18
+90.
+.15.
+-9.995
+!= == =
+|
+&4
+<= <  > >=
+>!=
+//isso é um comentario
+>_666_< // a partir daqui eh um comentario!
+nova linha
+/// 12 
+nova linha ! [^]
+"dentro do comentario"
+\\\ fora do comentario
+teste [ ! ] ^
+int j8_. = 1 ;
