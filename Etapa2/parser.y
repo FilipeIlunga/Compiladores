@@ -61,13 +61,9 @@ declaracao_variavel : tipo TK_IDENTIFIER '=' literal ';'
 declaracao_vetor : tipo TK_IDENTIFIER '[' LIT_INT ']' inicializacao_vetor_opcional ';'
                 ;
 
-inicializacao_vetor_opcional :  literais inicializacao_vetor_opcional
+inicializacao_vetor_opcional :  literal inicializacao_vetor_opcional
                    | 
                    ;
-
-literais : literal literais
-         |
-         ;
 
 declaracao_funcao : tipo TK_IDENTIFIER '(' parametros_formais ')' ';'
                  ;
