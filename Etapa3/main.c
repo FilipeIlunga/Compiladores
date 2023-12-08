@@ -1,36 +1,46 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "y.tab.h"
+#include "ast.h"
 
-//lex.yy.h
-int yylex();
-extern char *yytext;
-extern FILE *yyin;
+extern int yyparse();
+extern char* yytext;
+extern FILE* yyin;
+extern FILE* file();
 
+extern AST* getRoot();
+extern int getLineNumber(void);
+extern int isRunning(void);
+extern void initMe(void);
 
-int isRunning(void);
-void initMe(void);
+int main(int argc, char* argv[]) {
+  int token;
+  int ret;
+  FILE* output;
 
-int yyparse();
+  if (argc < 3) {
+    printf("call: ./etapa3 <input_file> <output_file>\n");
+    exit(1);
+  }
+  if (!(file(argv[1]))) {
+    printf("Cannot open file %s...\n",argv[1]);
+    exit(1);
+  }
+  if (!(output = fopen(argv[2], "w"))) {
+    printf("Cannot open file %s...\n",argv[1]);
+    exit(1);
+  }
 
-int main(int argc, char **argv) {
-    if (argc < 2) {
-        fprintf(stderr, "Usage: %s <input_file>\n", argv[0]);
-        exit(1);
-    }
+  initMe();
+  
+  yyparse();
 
-    FILE *input_file = fopen(argv[1], "r");
+  printf("\n\nInit uncompilation\n\n");
 
-    if (!input_file) {
-        perror("Error opening input file");
-        exit(2);
-    }
+  uncompileAST(getRoot(), output);
 
-    yyin = input_file;
+fprintf(stderr, "Uncompiling done!\n");
 
-    int result = yyparse();
+  fclose(output);
 
-    fclose(input_file);
-
-    return result;
+  exit(0);
 }
