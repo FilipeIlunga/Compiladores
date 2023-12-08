@@ -1,5 +1,5 @@
-etapa3: y.tab.o lex.yy.o hash.o ast.o
-	gcc -o etapa3 y.tab.o lex.yy.o hash.o ast.o
+etapa3: hash.o ast.o y.tab.o lex.yy.o 
+	gcc -Wall -o etapa3 hash.o ast.o y.tab.o lex.yy.o 
 
 hash.o: hash.c
 	gcc -c hash.c

@@ -122,11 +122,11 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "ast.h"
 #include "hash.h"
+#include "ast.h"
 
 int yylex();
-int yyerror(char *mensagem);
+int yyerror();
 AST* getRoot();
 extern int getLineNumber();
 
@@ -1993,7 +1993,7 @@ AST* getRoot() {
     return root;
 }
 
-int yyerror(char *err) {
+int yyerror() {
     fprintf(stderr, "ERRO na linha = %d\n", getLineNumber());
     exit(3);
 }
