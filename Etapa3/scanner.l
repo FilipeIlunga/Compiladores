@@ -1,6 +1,8 @@
 %{
 #include "y.tab.h"
-#include "hash.c"
+#include "hash.h"
+#include "ast.h"
+#include <stdio.h>
 
 int token;
 int running=1;

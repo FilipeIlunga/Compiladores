@@ -5,7 +5,7 @@
 extern int yyparse();
 extern char* yytext;
 extern FILE* yyin;
-extern FILE* file();
+
 
 extern AST* getRoot();
 extern int getLineNumber(void);
@@ -13,23 +13,22 @@ extern int isRunning(void);
 extern void initMe(void);
 
 int main(int argc, char* argv[]) {
-  int token;
-  int ret;
-  FILE* output;
-
-  if (argc < 3) {
-    printf("call: ./etapa3 <input_file> <output_file>\n");
-    exit(1);
-  }
-  if (!(file(argv[1]))) {
-    printf("Cannot open file %s...\n",argv[1]);
-    exit(1);
-  }
-  if (!(output = fopen(argv[2], "w"))) {
-    printf("Cannot open file %s...\n",argv[1]);
-    exit(1);
-  }
-
+    FILE* output;
+    //se não tiver 2 args
+    if (argc <= 2) {
+        fprintf(stderr, "Call: ./etapa3 input.txt output.txt\n");
+        exit(1);
+    }
+    //abertura de arquivo para leitura
+    if (0 == (yyin = fopen(argv[1],"r"))) {
+        fprintf(stderr, "Cannot open file %s\n", argv[1]);
+        exit(2);
+    }
+    //abertura de arquivo para escrita
+    if (0 == (output = fopen(argv[2],"w"))) {
+        fprintf(stderr, "Cannot open file %s\n", argv[2]);
+        exit(2);
+    }
   initMe();
   
   yyparse();
