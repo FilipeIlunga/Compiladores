@@ -79,7 +79,7 @@ parametros_formais_fim : ',' parametro_formal parametros_formais_fim
 parametro_formal : tipo TK_IDENTIFIER
                 ;
 
-lista_codigo : KW_CODE TK_IDENTIFIER bloco lista_codigo
+lista_codigo : KW_CODE TK_IDENTIFIER comando lista_codigo
             |
             ;
 
@@ -103,8 +103,8 @@ comando : comando_vazio
 comando_vazio : ';'
              ;
 
-comando_atribuicao : TK_IDENTIFIER '=' expressao
-                 | TK_IDENTIFIER '[' expressao ']' '=' expressao
+comando_atribuicao : TK_IDENTIFIER '=' expressao ';' 
+                 | TK_IDENTIFIER '[' expressao ']' '=' expressao ';' 
                  ;
 
 comando_print : KW_PRINT elementos_print ';'

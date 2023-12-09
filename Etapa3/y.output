@@ -42,8 +42,8 @@ Grammar
    19               | /* empty */
 
    20 comando: bloco
-   21        | TK_IDENTIFIER '=' expressao ';'
-   22        | TK_IDENTIFIER '[' expressao ']' '=' expressao ';'
+   21        | TK_IDENTIFIER '[' expressao ']' '=' expressao ';'
+   22        | TK_IDENTIFIER '=' expressao ';'
    23        | KW_PRINT LIT_STRING ';'
    24        | KW_PRINT expressao ';'
    25        | KW_IF '(' expressao ')' comando
@@ -102,8 +102,8 @@ $end (0) 0
 '<' (60) 42
 '=' (61) 5 21 22
 '>' (62) 43
-'[' (91) 6 22 31
-']' (93) 6 22 31
+'[' (91) 6 21 31
+']' (93) 6 21 31
 '{' (123) 17
 '}' (125) 17
 error (256)
@@ -395,8 +395,8 @@ state 21
 
 state 22
 
-   21 comando: TK_IDENTIFIER . '=' expressao ';'
-   22        | TK_IDENTIFIER . '[' expressao ']' '=' expressao ';'
+   21 comando: TK_IDENTIFIER . '[' expressao ']' '=' expressao ';'
+   22        | TK_IDENTIFIER . '=' expressao ';'
 
     '='  shift, and go to state 48
     '['  shift, and go to state 49
@@ -673,7 +673,7 @@ state 47
 
 state 48
 
-   21 comando: TK_IDENTIFIER '=' . expressao ';'
+   22 comando: TK_IDENTIFIER '=' . expressao ';'
 
     KW_INPUT       shift, and go to state 38
     TK_IDENTIFIER  shift, and go to state 39
@@ -688,7 +688,7 @@ state 48
 
 state 49
 
-   22 comando: TK_IDENTIFIER '[' . expressao ']' '=' expressao ';'
+   21 comando: TK_IDENTIFIER '[' . expressao ']' '=' expressao ';'
 
     KW_INPUT       shift, and go to state 38
     TK_IDENTIFIER  shift, and go to state 39
@@ -1088,7 +1088,7 @@ state 77
 
 state 78
 
-   21 comando: TK_IDENTIFIER '=' expressao . ';'
+   22 comando: TK_IDENTIFIER '=' expressao . ';'
    38 expressao: expressao . '+' expressao
    39          | expressao . '-' expressao
    40          | expressao . '*' expressao
@@ -1115,7 +1115,7 @@ state 78
 
 state 79
 
-   22 comando: TK_IDENTIFIER '[' expressao . ']' '=' expressao ';'
+   21 comando: TK_IDENTIFIER '[' expressao . ']' '=' expressao ';'
    38 expressao: expressao . '+' expressao
    39          | expressao . '-' expressao
    40          | expressao . '*' expressao
@@ -1514,14 +1514,14 @@ state 102
 
 state 103
 
-   21 comando: TK_IDENTIFIER '=' expressao ';' .
+   22 comando: TK_IDENTIFIER '=' expressao ';' .
 
-    $default  reduce using rule 21 (comando)
+    $default  reduce using rule 22 (comando)
 
 
 state 104
 
-   22 comando: TK_IDENTIFIER '[' expressao ']' . '=' expressao ';'
+   21 comando: TK_IDENTIFIER '[' expressao ']' . '=' expressao ';'
 
     '='  shift, and go to state 115
 
@@ -1610,7 +1610,7 @@ state 114
 
 state 115
 
-   22 comando: TK_IDENTIFIER '[' expressao ']' '=' . expressao ';'
+   21 comando: TK_IDENTIFIER '[' expressao ']' '=' . expressao ';'
 
     KW_INPUT       shift, and go to state 38
     TK_IDENTIFIER  shift, and go to state 39
@@ -1672,7 +1672,7 @@ state 117
 
 state 118
 
-   22 comando: TK_IDENTIFIER '[' expressao ']' '=' expressao . ';'
+   21 comando: TK_IDENTIFIER '[' expressao ']' '=' expressao . ';'
    38 expressao: expressao . '+' expressao
    39          | expressao . '-' expressao
    40          | expressao . '*' expressao
@@ -1713,6 +1713,6 @@ state 120
 
 state 121
 
-   22 comando: TK_IDENTIFIER '[' expressao ']' '=' expressao ';' .
+   21 comando: TK_IDENTIFIER '[' expressao ']' '=' expressao ';' .
 
-    $default  reduce using rule 22 (comando)
+    $default  reduce using rule 21 (comando)

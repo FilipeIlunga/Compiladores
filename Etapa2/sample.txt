@@ -28,6 +28,7 @@ code teste {
 }
 code nome {}
 
+code teste {;}
 
 code main
   {

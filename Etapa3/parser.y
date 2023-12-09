@@ -58,7 +58,8 @@ struct ast_node* ast;
 %type <ast> parametros_formais 
 %type <ast> parametros_formais_fim 
 %type <ast> parametro_formal 
-%type <ast> lista_codigo bloco 
+%type <ast> lista_codigo 
+%type <ast> bloco 
 %type <ast> lista_comandos 
 %type <ast> comando 
 %type <ast> expressao 
