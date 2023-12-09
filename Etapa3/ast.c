@@ -13,11 +13,13 @@ AST* astCreate(int type, HASH_NODE* symbol,AST* son0, AST* son1, AST* son2, AST*
 }
 
 void uncompileAST(AST* node, FILE* file) {
+
+  printf(" %s )\n", node->symbol?node->symbol->text:"");
+
     if (node == 0) return;
-    int i;
     switch (node->type) {
         case AST_SYMBOL: 
-            fprintf(file, "%s", node->symbol->text); 
+            fprintf(file, " %s ", node->symbol->text); 
             break;
         case AST_ADD: 
             uncompileAST(node->son[0], file);
@@ -130,8 +132,12 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[1], file);
             break;
         case AST_ELSE:
-            fprintf(file, "else \n");
+            fprintf(file, "if(");
             uncompileAST(node->son[0], file);
+            fprintf(file, ") then \n");
+            uncompileAST(node->son[1], file);
+            fprintf(file, "else\n");
+            uncompileAST(node->son[2], file);
             break;
         case AST_WHILE:
             fprintf(file, "while (");
@@ -144,11 +150,11 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[0], file);
             fprintf(file, ");\n");
             break;
-        case AST_CODE:
-            uncompileAST(node->son[0], file);
-            break;
+        // case AST_CODE:
+        //     uncompileAST(node->son[0], file);
+        //     break;
         case AST_INT:
-            fprintf(file, "int");
+            fprintf(file, " int ");
             break;
         case AST_FLOAT:
             fprintf(file, "float");
@@ -176,12 +182,12 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[0], file);
             uncompileAST(node->son[1], file);
             break;
-        case AST_ATTR:
-            uncompileAST(node->son[0], file);
-            fprintf(file, " = ");
-            uncompileAST(node->son[1], file);
-            fprintf(file, ";\n");
-            break;
+        // case AST_ATTR:
+        //     uncompileAST(node->son[0], file);
+        //     fprintf(file, " = ");
+        //     uncompileAST(node->son[1], file);
+        //     fprintf(file, ";\n");
+        //     break;
         case AST_PAREN:
             fprintf(file, "(");
             uncompileAST(node->son[0], file);
@@ -194,6 +200,8 @@ void uncompileAST(AST* node, FILE* file) {
             break;
         case AST_LSTARGFIM:
             uncompileAST(node->son[0], file);
+            fprintf(file, ",");
+            uncompileAST(node->son[1], file);
             break;
         case AST_VEC:
             fprintf(file, "%s[", node->symbol->text);
@@ -217,12 +225,12 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[1], file);
             fprintf(file, ";\n");
             break;
-        case AST_VECFIM:
-            uncompileAST(node->son[0], file);
-            break;
-        case AST_PROG:
-            uncompileAST(node->son[0], file);
-            break;
+        // case AST_VECFIM:
+        //     uncompileAST(node->son[0], file);
+        //     break;
+        // case AST_PROG:
+        //     uncompileAST(node->son[0], file);
+        //     break;
         case AST_LDECGLOBAL:
             uncompileAST(node->son[0], file);
             uncompileAST(node->son[1], file);
@@ -232,7 +240,6 @@ void uncompileAST(AST* node, FILE* file) {
         uncompileAST(node->son[0], file);
         fprintf(file, ";\n");
         break;
-
         default: fprintf(file, "UNKNOWN"); break;
     }
 }
@@ -291,8 +298,10 @@ void astPrint(AST* node, int level) {
 
         default: fprintf(stderr, "UNKNOWN"); break;
     }
+
   printf(" %s )\n", node->symbol?node->symbol->text:"");
   for(i=0; i<MAX_SONS; i++) {
     astPrint(node->son[i], level+1);
   }
+  
 }

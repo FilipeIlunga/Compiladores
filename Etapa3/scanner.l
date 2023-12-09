@@ -40,17 +40,17 @@ int isRunning(void) {
 
 [,;()[\]{}=+\-*/%<>&|~] { return yytext[0]; }
 
-[0-9]+							      {hashInsert(LIT_INT, yytext);return LIT_INT;}
-[0-9]+"."[0-9]+						{hashInsert(LIT_REAL, yytext);return LIT_REAL;}
-(\'.\')|(\'\')						{hashInsert(LIT_CHAR, yytext);return LIT_CHAR;}
-\"(\\.|[^\"\n])*\"				{hashInsert(LIT_STRING, yytext);return LIT_STRING;}   
+[0-9]+							       {yylval.symbol = hashInsert(LIT_INT, yytext);return LIT_INT;}
+[0-9]+"."[0-9]+						 {yylval.symbol = hashInsert(LIT_REAL, yytext);return LIT_REAL;}
+(\'.\')|(\'\')						 {yylval.symbol = hashInsert(LIT_CHAR, yytext);return LIT_CHAR;}
+\"(\\.|[^\"\n])*\"				 {yylval.symbol = hashInsert(LIT_STRING, yytext);return LIT_STRING;}   
 
 "<="          return OPERATOR_LE;       
 ">="          return OPERATOR_GE;       
 "=="          return OPERATOR_EQ;      
 "!="          return OPERATOR_DIF;
 
-[a-zA-Z0-9_]+		{hashInsert(TK_IDENTIFIER, yytext);return TK_IDENTIFIER;}
+[a-zA-Z0-9_]+		 {yylval.symbol = hashInsert(TK_IDENTIFIER, yytext);return TK_IDENTIFIER;}
 
 \n								{lineNumber++;}
 [ "\t"]               {}

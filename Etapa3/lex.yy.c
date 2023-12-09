@@ -868,22 +868,22 @@ YY_RULE_SETUP
 case 12:
 YY_RULE_SETUP
 #line 43 "scanner.l"
-{hashInsert(LIT_INT, yytext);return LIT_INT;}
+{yylval.symbol = hashInsert(LIT_INT, yytext);return LIT_INT;}
 	YY_BREAK
 case 13:
 YY_RULE_SETUP
 #line 44 "scanner.l"
-{hashInsert(LIT_REAL, yytext);return LIT_REAL;}
+{yylval.symbol = hashInsert(LIT_REAL, yytext);return LIT_REAL;}
 	YY_BREAK
 case 14:
 YY_RULE_SETUP
 #line 45 "scanner.l"
-{hashInsert(LIT_CHAR, yytext);return LIT_CHAR;}
+{yylval.symbol = hashInsert(LIT_CHAR, yytext);return LIT_CHAR;}
 	YY_BREAK
 case 15:
 YY_RULE_SETUP
 #line 46 "scanner.l"
-{hashInsert(LIT_STRING, yytext);return LIT_STRING;}   
+{yylval.symbol = hashInsert(LIT_STRING, yytext);return LIT_STRING;}   
 	YY_BREAK
 case 16:
 YY_RULE_SETUP
@@ -908,7 +908,7 @@ return OPERATOR_DIF;
 case 20:
 YY_RULE_SETUP
 #line 53 "scanner.l"
-{hashInsert(TK_IDENTIFIER, yytext);return TK_IDENTIFIER;}
+{yylval.symbol = hashInsert(TK_IDENTIFIER, yytext);return TK_IDENTIFIER;}
 	YY_BREAK
 case 21:
 /* rule 21 can match eol */

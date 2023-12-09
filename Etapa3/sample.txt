@@ -1,6 +1,8 @@
 // UFRGS - Compiladores - Marcelo Johann - 2023/2
 
-char a=15;
+int g=15;
+int t= 't';
+char a=51;
 char x='x';
 char c='x';
 char d=100;
@@ -11,7 +13,9 @@ int matrix[100];
 float f=2.5;
 int a=0;
 
-int main();
+int proto ();
+
+int teste ();
 int incn (int x, int n );
 
 ///
@@ -19,19 +23,27 @@ Este eh um comentario
 de multiplas 
 linhas
 \\\
+code teste {
+  d = input(int);
+}
+code nome a = 1;
+code teste b = 1 - a;
+
+code ask print "1.5";
 
 code main
   {
-  1a = 0;
-  d = d - i;
-  d = 5;
-  v[d] = 55;
-  print v[5];
-  print d;
-  i = 2;
+  {
+    1a = 0;
+    d = d - i;
+    d = 5;
+    v[d] = 55;
+    print v[5];
+    print d;
+    i = 2;
+  }
 
   print "Digite um numero: \n";
-  d = input(int);
   print "Digite mais um numero: \n";
 
   while (i<10)
@@ -44,7 +56,6 @@ code main
   print d;
   print "\n";
 
- 
   if (a==15)
     {
     a = a + 1;
@@ -66,5 +77,3 @@ code incn
   }
 
 // end of file
-  
-
