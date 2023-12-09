@@ -32,14 +32,14 @@
 #define AST_LSTDEC        22
 #define AST_DECVAR        23
 #define AST_DECVEC        24 
-#define AST_DECFUNC       25
+#define AST_DECPROTO       25
 #define AST_PARAM         26
 #define AST_BLOCO         27 
 #define AST_LSTCOMANDO    28
 #define AST_VEC           29  
 #define AST_FUNC          30  
 #define AST_VECFIM        31 
-#define AST_LSTVEC        32
+#define AST_OPT           32
 #define AST_PARAMINIT     33
 #define AST_LSTPARAM      34
 #define AST_LSTCODIGO     35 

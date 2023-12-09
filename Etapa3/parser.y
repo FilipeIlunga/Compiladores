@@ -51,10 +51,13 @@ struct ast_node* ast;
 %left '*' '/'
 
 %type <ast> programa
-%type <ast> declaracoes_inicial 
+%type <ast> lista_decl 
 %type <ast> declaracoes_globais 
-%type <ast> declaracao_global 
-%type <ast> inicializacao_vetor_opcional 
+%type <ast> decl_var
+%type <ast> decl_vetor
+%type <ast> decl_proto
+%type <ast> decl_func
+%type <ast> opcional
 %type <ast> parametros_formais 
 %type <ast> parametros_formais_fim 
 %type <ast> parametro_formal 
@@ -62,35 +65,45 @@ struct ast_node* ast;
 %type <ast> bloco 
 %type <ast> lista_comandos 
 %type <ast> comando 
+%type <ast> comando_atribuicao
+%type <ast> comando_print 
+%type <ast> comando_printResto  
 %type <ast> expressao 
 %type <ast> lista_argumentos 
 %type <ast> lista_argumentos_fim 
 %type <ast> tipo
 %type <ast> literal 
 
+
 %start programa
 
 %%
 
-programa : declaracoes_inicial                                                                  {root=$$; astPrint(root,0);}
+programa : declaracoes_globais                                                                  {root=$$; astPrint(root,0);}
          ;
 
 
-declaracoes_inicial: declaracoes_globais lista_codigo                                           {$$=astCreate(AST_LDECGLOBAL, 0, $1, $2, 0, 0);}
+declaracoes_globais: lista_decl lista_codigo                                           {$$=astCreate(AST_LDECGLOBAL, 0, $1, $2, 0, 0);}
                   ;
 
-declaracoes_globais : declaracao_global declaracoes_globais                                     {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
-                   |                                                                            {$$=0;}
-                   ;
+lista_decl : decl_var lista_decl                                                        {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
+            | decl_vetor lista_decl                                                     {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
+            | decl_proto lista_decl                                                      {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
+            |                                                                           {$$=0;}
+            ;
 
-declaracao_global : tipo TK_IDENTIFIER '=' literal ';'                                          {$$=astCreate(AST_DECVAR, $2, $1, $4, 0, 0);}
-                  | tipo TK_IDENTIFIER '[' LIT_INT ']' inicializacao_vetor_opcional ';'         {$$=astCreate(AST_DECVEC, $2, $1, astCreate(AST_SYMBOL, $4, 0, 0, 0, 0), $6, 0);} 
-                  | tipo TK_IDENTIFIER '(' parametros_formais ')' ';'                           {$$=astCreate(AST_DECFUNC, $2, $1, $4, 0, 0);} 
-                  ;
+decl_var: tipo TK_IDENTIFIER '=' literal ';'                                                    {$$=astCreate(AST_DECVAR, $2, $1, $4, 0, 0);}
+          ;
 
-inicializacao_vetor_opcional :  literal inicializacao_vetor_opcional                             {$$=astCreate(AST_LSTVEC, 0, $1, $2, 0, 0);}
-                   |                                                                             {$$=0;}
-                   ;
+decl_vetor: tipo TK_IDENTIFIER '[' LIT_INT ']' opcional ';'                                     {$$=astCreate(AST_DECVEC, $2, $1, astCreate(AST_SYMBOL, $4, 0, 0, 0, 0), $6, 0);}
+          ;
+
+decl_proto: tipo TK_IDENTIFIER '(' parametros_formais ')' ';'                                    {$$=astCreate(AST_DECPROTO, $2, $1, $4, 0, 0);}
+            ;
+
+opcional: literal opcional                                                                      {$$=astCreate(AST_OPT, 0, $1, $2, 0, 0);}
+          |                                                                                     {$$=0;}
+          ;
 
 parametros_formais : parametro_formal parametros_formais_fim                                    {$$=astCreate(AST_PARAMINIT, 0, $1, $2, 0, 0);}
                   |                                                                             {$$=0;}
@@ -103,9 +116,12 @@ parametros_formais_fim : ',' parametro_formal parametros_formais_fim            
 parametro_formal : tipo TK_IDENTIFIER                                                           {$$=astCreate(AST_PARAM, $2, $1, 0, 0, 0);}
                 ;               
 
-lista_codigo : KW_CODE TK_IDENTIFIER comando lista_codigo                                       {$$=astCreate(AST_LSTCODIGO, $2, $3, $4, 0, 0);}
-            |                                                                                   {$$=0;}
+lista_codigo : decl_func lista_codigo                                                            {$$=astCreate(AST_LSTCODIGO, 0, $1, $2, 0, 0);}
+            |                                                                                    {$$=0;}
             ;           
+
+decl_func:  KW_CODE TK_IDENTIFIER comando                                                         {$$=astCreate(AST_CODE, $2, $3, 0, 0, 0);}
+            ;
 
 bloco : '{' lista_comandos '}'                                                                  {$$=astCreate(AST_BLOCO, 0, $2, 0, 0, 0);}
       ;         
@@ -115,17 +131,27 @@ lista_comandos : comando lista_comandos                                         
               ;         
 
 comando : bloco                                                                                 {$$=$1;}
-        | TK_IDENTIFIER '=' expressao ';'                                                       {$$=astCreate(AST_ATTREXPR, $1, $3, 0, 0, 0);}
-        | TK_IDENTIFIER '[' expressao ']' '=' expressao ';'                                     {$$=astCreate(AST_ATTRVEC, $1, $3, $6, 0, 0);}
-        | KW_PRINT LIT_STRING ';'                                                               {$$=astCreate(AST_PRINT, 0, astCreate(AST_SYMBOL, $2, 0, 0, 0 ,0), 0, 0, 0);}                
-        | KW_PRINT expressao ';'                                                                {$$=astCreate(AST_PRINTEXP, 0, $2, 0, 0, 0);}     
+        | comando_atribuicao                                                                    {$$=$1;}
+        | comando_print                                                                         {$$=$1;}
         | KW_IF '(' expressao ')' comando                                                       {$$=astCreate(AST_IF, 0, $3, $5, 0, 0);}
         | KW_IF '(' expressao ')' comando KW_ELSE comando                                       {$$=astCreate(AST_ELSE, 0, $3, $5, $7, 0);}
         | KW_WHILE '(' expressao ')' comando                                                    {$$=astCreate(AST_WHILE, 0, $3, $5, 0, 0);}
         | KW_RETURN expressao ';'                                                               {$$=astCreate(AST_RETURN, 0, $2, 0, 0, 0);}
         | ';'                                                                                   {$$=0;}
         ;
- 
+
+comando_atribuicao: TK_IDENTIFIER '=' expressao ';'                                             {$$=astCreate(AST_ATTREXPR, $1, $3, 0, 0, 0);}
+                  | TK_IDENTIFIER '[' expressao ']' '=' expressao ';'                           {$$=astCreate(AST_ATTRVEC, $1, $3, $6, 0, 0);}
+                  ;
+
+comando_print: KW_PRINT comando_printResto ';'                                                  {$$=astCreate(AST_PRINT, 0, $2, 0, 0, 0);}
+            ;
+
+comando_printResto: LIT_STRING     {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+                 |  expressao       {$$=$1;}
+                 ;
+
+
 expressao : TK_IDENTIFIER                                                                       {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
           | TK_IDENTIFIER '[' expressao ']'                                                     {$$=astCreate(AST_VEC, $1, $3, 0, 0, 0);}
           | TK_IDENTIFIER '(' lista_argumentos ')'                                              {$$=astCreate(AST_FUNC, $1, $3, 0, 0, 0);}

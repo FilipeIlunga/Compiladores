@@ -16,7 +16,8 @@ void uncompileAST(AST* node, FILE* file) {
 
   printf(" %s )\n", node->symbol?node->symbol->text:"");
 
-    if (node == 0) return;
+    if (node == NULL) return;
+    
     switch (node->type) {
         case AST_SYMBOL: 
             fprintf(file, " %s ", node->symbol->text); 
@@ -93,18 +94,20 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[2], file);
             fprintf(file, ";\n");
             break;
-        case AST_DECFUNC:
+
+        case AST_DECPROTO:
             uncompileAST(node->son[0], file);
             fprintf(file, " %s(", node->symbol->text);
             uncompileAST(node->son[1], file);
-            fprintf(file, ")");
-            uncompileAST(node->son[2], file);
-            fprintf(file, ";\n");
+            fprintf(file, ");\n");
+            // uncompileAST(node->son[2], file);
+            // fprintf(file, ";\n");
             break;
         case AST_PARAM:
             uncompileAST(node->son[0], file);
+            fprintf(file, " ");
             fprintf(file, " %s", node->symbol->text);
-            uncompileAST(node->son[1], file);
+            // uncompileAST(node->son[1], file);
             break;
         case AST_BLOCO:
             fprintf(file, "{\n");
@@ -150,9 +153,10 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[0], file);
             fprintf(file, ");\n");
             break;
-        // case AST_CODE:
-        //     uncompileAST(node->son[0], file);
-        //     break;
+        case AST_CODE:
+            fprintf(file, "code ");
+            fprintf(file, " %s ", node->symbol->text);
+            uncompileAST(node->son[0], file);
         case AST_INT:
             fprintf(file, " int ");
             break;
@@ -162,9 +166,9 @@ void uncompileAST(AST* node, FILE* file) {
         case AST_CHAR:
             fprintf(file, "char");
             break;
-        case AST_LSTVEC:
-            fprintf(file, " ");
+        case AST_OPT:
             uncompileAST(node->son[0], file);
+            fprintf(file, " ");
             uncompileAST(node->son[1], file);
             break;
         case AST_PARAMINIT:
@@ -275,13 +279,13 @@ void astPrint(AST* node, int level) {
         case AST_LSTDEC: fprintf(stderr, "AST_LSTDEC"); break;
         case AST_DECVAR: fprintf(stderr, "AST_DECVAR"); break;
         case AST_DECVEC: fprintf(stderr, "AST_DECVEC"); break;
-        case AST_DECFUNC: fprintf(stderr, "AST_DECFUNC"); break;
+        case AST_DECPROTO: fprintf(stderr, "AST_DECPROTO"); break;
         case AST_PARAM: fprintf(stderr, "AST_PARAM"); break;
         case AST_BLOCO: fprintf(stderr, "AST_BLOCO"); break;
         case AST_LSTCOMANDO: fprintf(stderr, "AST_LSTCOMANDO"); break;
         case AST_VEC: fprintf(stderr, "AST_VEC"); break;
         case AST_FUNC: fprintf(stderr, "AST_FUNC"); break;
-        case AST_LSTVEC: fprintf(stderr, "AST_LSTVEC"); break;
+        case AST_OPT: fprintf(stderr, "AST_OPT"); break;
         case AST_PARAMINIT: fprintf(stderr, "AST_PARAMINIT"); break;
         case AST_LSTPARAM: fprintf(stderr, "AST_LSTPARAM"); break;
         case AST_LSTCODIGO: fprintf(stderr, "AST_LSTCODIGO"); break;
