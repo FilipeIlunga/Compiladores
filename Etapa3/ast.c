@@ -14,10 +14,8 @@ AST* astCreate(int type, HASH_NODE* symbol,AST* son0, AST* son1, AST* son2, AST*
 
 void uncompileAST(AST* node, FILE* file) {
 
-  printf(" %s )\n", node->symbol?node->symbol->text:"");
-
     if (node == NULL) return;
-    
+      printf(" %s )\n", node->symbol?node->symbol->text:"");
     switch (node->type) {
         case AST_SYMBOL: 
             fprintf(file, " %s ", node->symbol->text); 
@@ -135,11 +133,7 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[1], file);
             break;
         case AST_ELSE:
-            fprintf(file, "if(");
-            uncompileAST(node->son[0], file);
-            fprintf(file, ") then \n");
-            uncompileAST(node->son[1], file);
-            fprintf(file, "else\n");
+            fprintf(file, " else\n");
             uncompileAST(node->son[2], file);
             break;
         case AST_WHILE:

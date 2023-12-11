@@ -34,7 +34,7 @@ int main(int argc, char* argv[]) {
 
   uncompileAST(getRoot(), output);
 
-fprintf(stderr, "Uncompiling done!\n");
+  fprintf(stderr, "Uncompiling done!\n");
 
   fclose(output);
 

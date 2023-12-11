@@ -46,10 +46,6 @@ struct ast_node* ast;
 
 %token TOKEN_ERROR
 
-%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
-%left '+' '-'
-%left '*' '/'
-
 %type <ast> programa
 %type <ast> lista_decl 
 %type <ast> declaracoes_globais 
@@ -68,18 +64,25 @@ struct ast_node* ast;
 %type <ast> comando_atribuicao
 %type <ast> comando_print 
 %type <ast> comando_printResto  
+%type <ast> comando_return
+%type <ast> comando_else
+%type <ast> comando_if
+%type <ast> comando_fluxo
 %type <ast> expressao 
 %type <ast> lista_argumentos 
 %type <ast> lista_argumentos_fim 
 %type <ast> tipo
 %type <ast> literal 
 
+%left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
+%left '+' '-'
+%left '*' '/'
 
 %start programa
 
 %%
 
-programa : declaracoes_globais                                                                  {root=$$; astPrint(root,0);}
+programa : declaracoes_globais                                                         {root=$$; astPrint(root,0);}
          ;
 
 
@@ -133,12 +136,24 @@ lista_comandos : comando lista_comandos                                         
 comando : bloco                                                                                 {$$=$1;}
         | comando_atribuicao                                                                    {$$=$1;}
         | comando_print                                                                         {$$=$1;}
-        | KW_IF '(' expressao ')' comando                                                       {$$=astCreate(AST_IF, 0, $3, $5, 0, 0);}
-        | KW_IF '(' expressao ')' comando KW_ELSE comando                                       {$$=astCreate(AST_ELSE, 0, $3, $5, $7, 0);}
-        | KW_WHILE '(' expressao ')' comando                                                    {$$=astCreate(AST_WHILE, 0, $3, $5, 0, 0);}
-        | KW_RETURN expressao ';'                                                               {$$=astCreate(AST_RETURN, 0, $2, 0, 0, 0);}
+        | comando_fluxo                                                                         {$$=$1;}
+        | comando_return                                                                        {$$=$1;}c
         | ';'                                                                                   {$$=0;}
         ;
+
+comando_fluxo: comando_if                                                                       {$$=$1;}
+                | KW_WHILE '(' expressao ')' comando                                            {$$=astCreate(AST_WHILE, 0, $3, $5, 0, 0);}
+                ;
+
+comando_if: KW_IF '(' expressao ')' comando comando_else                                        {$$=astCreate(AST_IF, 0, $3, $5, $6, 0);}
+        ;
+
+comando_else: KW_ELSE comando                                                                   {$$=astCreate(AST_ELSE, 0, $2, 0, 0, 0);}
+      |                                                                                         {$$=0;}
+      ;
+
+comando_return: KW_RETURN expressao ';'                                                         {$$=astCreate(AST_RETURN, 0, $2, 0, 0, 0);}
+            ;
 
 comando_atribuicao: TK_IDENTIFIER '=' expressao ';'                                             {$$=astCreate(AST_ATTREXPR, $1, $3, 0, 0, 0);}
                   | TK_IDENTIFIER '[' expressao ']' '=' expressao ';'                           {$$=astCreate(AST_ATTRVEC, $1, $3, $6, 0, 0);}
@@ -151,7 +166,6 @@ comando_printResto: LIT_STRING     {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
                  |  expressao       {$$=$1;}
                  ;
 
-
 expressao : TK_IDENTIFIER                                                                       {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
           | TK_IDENTIFIER '[' expressao ']'                                                     {$$=astCreate(AST_VEC, $1, $3, 0, 0, 0);}
           | TK_IDENTIFIER '(' lista_argumentos ')'                                              {$$=astCreate(AST_FUNC, $1, $3, 0, 0, 0);}
@@ -159,7 +173,7 @@ expressao : TK_IDENTIFIER                                                       
           | LIT_REAL                                                                            {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
           | LIT_CHAR                                                                            {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
           | LIT_STRING                                                                          {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
-          | KW_INPUT '(' tipo ')'                                                               {$$=astCreate(AST_INPUT, 0, $3, 0, 0 ,0);} 
+          | KW_INPUT '(' tipo ')'                                                               {$$=astCreate(AST_INPUT, 0, $3, 0, 0, 0);}
           | expressao '+' expressao                                                             {$$=astCreate(AST_ADD, 0, $1, $3, 0, 0);}
           | expressao '-' expressao                                                             {$$=astCreate(AST_SUB, 0, $1, $3, 0, 0);}
           | expressao '*' expressao                                                             {$$=astCreate(AST_MUL, 0, $1, $3, 0, 0);}
