@@ -193,7 +193,6 @@ void uncompileAST(AST* node, FILE* file) {
             break;
         case AST_LSTARGFIM:
             uncompileAST(node->son[0], file);
-            fprintf(file, ",");
             uncompileAST(node->son[1], file);
             break;
         case AST_VEC:
