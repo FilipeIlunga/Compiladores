@@ -91,7 +91,7 @@ declaracoes_globais: lista_decl lista_codigo                                    
 
 lista_decl : decl_var lista_decl                                                        {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
             | decl_vetor lista_decl                                                     {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
-            | decl_proto lista_decl                                                      {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
+            | decl_proto lista_decl                                                     {$$=astCreate(AST_LSTDEC, 0, $1, $2, 0, 0);}
             |                                                                           {$$=0;}
             ;
 
@@ -137,7 +137,7 @@ comando : bloco                                                                 
         | comando_atribuicao                                                                    {$$=$1;}
         | comando_print                                                                         {$$=$1;}
         | comando_fluxo                                                                         {$$=$1;}
-        | comando_return                                                                        {$$=$1;}c
+        | comando_return                                                                        {$$=$1;}
         | ';'                                                                                   {$$=0;}
         ;
 
@@ -162,8 +162,8 @@ comando_atribuicao: TK_IDENTIFIER '=' expressao ';'                             
 comando_print: KW_PRINT comando_printResto ';'                                                  {$$=astCreate(AST_PRINT, 0, $2, 0, 0, 0);}
             ;
 
-comando_printResto: LIT_STRING     {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
-                 |  expressao       {$$=$1;}
+comando_printResto: LIT_STRING                                                                  {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
+                 |  expressao                                                                   {$$=$1;}
                  ;
 
 expressao : TK_IDENTIFIER                                                                       {$$=astCreate(AST_SYMBOL, $1, 0, 0, 0, 0);}
