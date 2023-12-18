@@ -10,9 +10,11 @@
  int  matrix[  100 ];
  float  f =  2.5 ;
  int  a =  0 ;
+ int  t[  10 ];
  int  proto( );
  int  teste( );
  int  incn(  int   x ,  int   n );
+ int  ola(  int   a );
 code  teste {
  d =  input ( int );
 ;
@@ -29,6 +31,7 @@ v[ d ] =  55 ;
  print  v[  5 ];
  print  d ;
  i =  2 ;
+ a =  f(  a ) +  0 ;
 }
  print  "Digite um numero: \n" ;
  print  "Digite mais um numero: \n" ;

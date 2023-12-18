@@ -101,7 +101,6 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[0], file);
             fprintf(file, " ");
             fprintf(file, " %s ", node->symbol->text);
-            // uncompileAST(node->son[1], file);
             break;
         case AST_BLOCO:
             fprintf(file, "{\n");
@@ -188,10 +187,10 @@ void uncompileAST(AST* node, FILE* file) {
             break;
         case AST_LSTARG:
             uncompileAST(node->son[0], file);
-            fprintf(file, ",");
             uncompileAST(node->son[1], file);
             break;
         case AST_LSTARGFIM:
+            fprintf(file, ",");
             uncompileAST(node->son[0], file);
             uncompileAST(node->son[1], file);
             break;
