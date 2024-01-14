@@ -21,43 +21,48 @@
 #define AST_GE            11
 #define AST_EQ            12
 #define AST_DIF           13 
-#define AST_NOT           14 
-#define AST_IF            15
-#define AST_ELSE          16
-#define AST_WHILE         17
-#define AST_INPUT         18
-#define AST_CODE          19
-#define AST_PRINT         20
-#define AST_RETURN        21
-#define AST_LSTDEC        22
-#define AST_DECVAR        23
-#define AST_DECVEC        24 
-#define AST_DECPROTO      25
-#define AST_PARAM         26
-#define AST_BLOCO         27 
-#define AST_LSTCOMANDO    28
-#define AST_VEC           29  
-#define AST_FUNC          30  
-#define AST_VECFIM        31 
-#define AST_OPT           32
-#define AST_PARAMINIT     33
-#define AST_LSTPARAM      34
-#define AST_LSTCODIGO     35 
-#define AST_ATTR          36 
-#define AST_ATTREXPR      37
-#define AST_ATTRVEC       38
-#define AST_PAREN         39
-#define AST_LSTARG        40
-#define AST_LSTARGFIM     41 
-#define AST_PROG          42    
-#define AST_LDECGLOBAL    43
-#define AST_PRINTEXP      44
+#define AST_OR            14
+#define AST_AND           15
+#define AST_NOT           16 
+#define AST_IF            17
+#define AST_ELSE          18
+#define AST_WHILE         19
+#define AST_INPUT         20
+#define AST_CODE          21
+#define AST_PRINT         22
+#define AST_RETURN        23
+#define AST_LSTDEC        24
+#define AST_DECVAR        25
+#define AST_DECVEC        26 
+#define AST_DECPROTO      27
+#define AST_PARAM         28
+#define AST_BLOCO         29 
+#define AST_LSTCOMANDO    30
+#define AST_VEC           31  
+#define AST_FUNC          32  
+#define AST_VECFIM        33 
+#define AST_OPT           34
+#define AST_PARAMINIT     35
+#define AST_LSTPARAM      36
+#define AST_LSTCODIGO     37 
+#define AST_ATTR          38 
+#define AST_ATTREXPR      39
+#define AST_ATTRVEC       40
+#define AST_PAREN         41
+#define AST_LSTARG        42
+#define AST_LSTARGFIM     43 
+#define AST_PROG          44    
+#define AST_LDECGLOBAL    45
+#define AST_PRINTEXP      46
 
 typedef struct ast_node {
     int type;
+    int dataType;
+    int lineNumber;
     HASH_NODE* symbol;
     struct ast_node* son[MAX_SONS];
 } AST;
+
 
 AST* astCreate(int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3);
 void astPrint(AST* node, int level);

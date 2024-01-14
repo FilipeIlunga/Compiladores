@@ -52,13 +52,16 @@
      OPERATOR_LE = 268,
      OPERATOR_GE = 269,
      OPERATOR_EQ = 270,
-     OPERATOR_DIF = 271,
-     TK_IDENTIFIER = 272,
-     LIT_INT = 273,
-     LIT_REAL = 274,
-     LIT_CHAR = 275,
-     LIT_STRING = 276,
-     TOKEN_ERROR = 277
+     OPERATOR_NOT = 271,
+     OPERATOR_OR = 272,
+     OPERATOR_AND = 273,
+     OPERATOR_DIF = 274,
+     TK_IDENTIFIER = 275,
+     LIT_INT = 276,
+     LIT_REAL = 277,
+     LIT_CHAR = 278,
+     LIT_STRING = 279,
+     TOKEN_ERROR = 280
    };
 #endif
 /* Tokens.  */
@@ -75,26 +78,29 @@
 #define OPERATOR_LE 268
 #define OPERATOR_GE 269
 #define OPERATOR_EQ 270
-#define OPERATOR_DIF 271
-#define TK_IDENTIFIER 272
-#define LIT_INT 273
-#define LIT_REAL 274
-#define LIT_CHAR 275
-#define LIT_STRING 276
-#define TOKEN_ERROR 277
+#define OPERATOR_NOT 271
+#define OPERATOR_OR 272
+#define OPERATOR_AND 273
+#define OPERATOR_DIF 274
+#define TK_IDENTIFIER 275
+#define LIT_INT 276
+#define LIT_REAL 277
+#define LIT_CHAR 278
+#define LIT_STRING 279
+#define TOKEN_ERROR 280
 
 
 
 
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 typedef union YYSTYPE
-#line 21 "parser.y"
+#line 24 "parser.y"
 {
 struct hash_node* symbol;
 struct ast_node* ast;
 }
 /* Line 1529 of yacc.c.  */
-#line 98 "y.tab.h"
+#line 104 "y.tab.h"
 	YYSTYPE;
 # define yystype YYSTYPE /* obsolescent; will be withdrawn */
 # define YYSTYPE_IS_DECLARED 1

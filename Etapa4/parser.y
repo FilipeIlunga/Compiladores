@@ -7,11 +7,14 @@
 #include <stdlib.h>
 #include "hash.h"
 #include "ast.h"
+#include "semantic.h"
+
 
 int yylex();
 int yyerror();
 AST* getRoot();
 extern int getLineNumber();
+void checkSemantic(void);
 
 AST* root; 
 
@@ -35,7 +38,10 @@ struct ast_node* ast;
 %token KW_INPUT
 %token OPERATOR_LE      
 %token OPERATOR_GE      
-%token OPERATOR_EQ      
+%token OPERATOR_EQ 
+%token OPERATOR_NOT
+%token OPERATOR_OR  
+%token OPERATOR_AND  
 %token OPERATOR_DIF
 
 %token <symbol> TK_IDENTIFIER
@@ -74,6 +80,7 @@ struct ast_node* ast;
 %type <ast> tipo
 %type <ast> literal 
 
+%left OPERATOR_OR OPERATOR_AND OPERATOR_NOT
 %left '<' '>' OPERATOR_LE OPERATOR_GE OPERATOR_EQ OPERATOR_DIF
 %left '+' '-'
 %left '*' '/'
@@ -82,7 +89,16 @@ struct ast_node* ast;
 
 %%
 
-programa : declaracoes_globais                                                         {root=$$; astPrint(root,0);}
+programa : declaracoes_globais                                                        {
+                                                                                        astPrint(root,0);
+                                                                                        root=$$; 
+                                                                                        setDeclaration(root);
+                                                                                        setNodeType(root);
+                                                                                        checkUndeclared();
+                                                                                        checkUsage(root);
+                                                                                        checkReturns(root);
+                                                                                        checkSemantic();
+                                                                                     }
          ;
 
 
@@ -180,6 +196,9 @@ expressao : TK_IDENTIFIER                                                       
           | expressao '/' expressao                                                             {$$=astCreate(AST_DIV, 0, $1, $3, 0, 0);}
           | expressao '<' expressao                                                             {$$=astCreate(AST_LESS, 0, $1, $3, 0, 0);}
           | expressao '>' expressao                                                             {$$=astCreate(AST_GREATER, 0, $1, $3, 0, 0);}
+          | expressao OPERATOR_AND expressao                                                    {$$=astCreate(AST_AND, 0, $1, $3, 0, 0);}
+          | expressao OPERATOR_OR expressao                                                     {$$=astCreate(AST_OR, 0, $1, $3, 0, 0);}
+          | OPERATOR_NOT expressao                                                              {$$=astCreate(AST_NOT, 0, $2, 0, 0, 0);}
           | expressao OPERATOR_LE expressao                                                     {$$=astCreate(AST_LE, 0, $1, $3, 0, 0);} 
           | expressao OPERATOR_GE expressao                                                     {$$=astCreate(AST_GE, 0, $1, $3, 0, 0);}   
           | expressao OPERATOR_EQ expressao                                                     {$$=astCreate(AST_EQ, 0, $1, $3, 0, 0);}  
@@ -210,6 +229,13 @@ tipo : KW_INT                                                                   
 
 AST* getRoot() {
     return root;
+}
+
+void checkSemantic() {
+    if(totalSemanticErrors() > 0) {
+        fprintf(stderr, "%d, Semantic Errors.\n", totalSemanticErrors());
+        exit(4);
+    }
 }
 
 int yyerror() {

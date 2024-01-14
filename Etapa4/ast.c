@@ -1,4 +1,6 @@
 #include "ast.h"
+extern int getLineNumber();
+
 
 AST* astCreate(int type, HASH_NODE* symbol,AST* son0, AST* son1, AST* son2, AST* son3) {
     AST* newnode;
@@ -9,6 +11,8 @@ AST* astCreate(int type, HASH_NODE* symbol,AST* son0, AST* son1, AST* son2, AST*
     newnode->son[1] = son1;
     newnode->son[2] = son2;
     newnode->son[3] = son3;
+    newnode->lineNumber = getLineNumber();
+    newnode->dataType = NO_DATATYPE;
     return newnode;
 }
 
@@ -49,6 +53,20 @@ void uncompileAST(AST* node, FILE* file) {
             uncompileAST(node->son[0], file);
             fprintf(file, " > ");
             uncompileAST(node->son[1], file);
+            break;
+        case AST_AND:
+             uncompileAST(node->son[0], file);
+             fprintf(file, " & ");
+            uncompileAST(node->son[1], file);
+            break;
+         case AST_OR:
+            uncompileAST(node->son[0], file);
+            fprintf(file, " | ");
+            uncompileAST(node->son[1], file);
+            break;
+        case AST_NOT:
+           fprintf(file, " ~ ");
+           uncompileAST(node->son[0], file);
             break;
         case AST_LE:
             uncompileAST(node->son[0], file);
