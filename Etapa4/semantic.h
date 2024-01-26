@@ -1,35 +1,39 @@
-
 #ifndef SEMANTIC_H
 #define SEMANTIC_H
 
+#include "ast.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
-#include "ast.h"
 
-int semanticVerification(AST* root);
-void setDeclaration(AST* node);
-void setNodeType(AST* node);
-void checkUndeclared();
-void checkUsage(AST* node);
-int checkEveryVecElement(AST* node, int dataType);
-int isDataTypeCompatible(int dataType_1, int dataType_2);
-int isInteger(int dataType);
-int isNumerical(int dataType);
-int isRelational(int nodeType);
-int isArithmetic(int nodeType);
-int isLogical(int nodeType);
-int greaterDataType(int dataType_1, int dataType_2);
-void validateFunction(AST* node);
-void checkPrint(AST* node);
-AST* findFuncionDeclaration(char* name, AST* node);
-int checkNumberOfArguments(AST* node, AST* decl);
-int getNumberOfArguments(AST* node);
-void compareCalledArguments(AST* node, AST* decl);
-void isReturnCompatible(AST* node, int dataType);
-void checkReturns(AST* node);
-
+void checkUndeclared(AST *node);
+void handleSemanticErrors(int errorType, int lineNumber, const char *customMessage);
+void checkAndSetDeclarations(AST *node, AST *root);
+void setSymbolDataType(AST *node, AST *dataTypeNode);
+void checkAndSetNodes(AST *node);
+void handleSymbolNode(AST *node);
+void handleArithmeticOperation(AST *node);
+void handleRelationalOperation(AST *node);
+void handleLogicalOperation(AST *node);
+int isArithmeticOperation(int type);
+int isRelationalOperation(int type);
+int isLogicalOperation(int type);
+void checkUsage(AST *node, AST *root);
+void handleAttributeExpression(AST *node);
+void handleAttributeVector(AST *node);
+void checkFunction(AST *node, AST *root);
+void compareFunctionArguments(AST *node1, AST *node2);
+int countParams(AST *node);
+AST *findFunctionDeclaration(char *text, AST *node);
+void setFunctionImplementation(char *text, AST *node);
+void checkExpressionCompatibility(AST *node);
+int checkOperandCompatibility(AST *operand1, AST *operand2);
+void handleSemanticSwitch(AST *node);
+void checkOperands(AST *node);
+void checkMisc(AST *node);
+void checkReturnTypeCompatibility(AST *node, int datatype);
 int totalSemanticErrors();
+int isCompatible(int type1, int type2);
 
 
 #endif

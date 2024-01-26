@@ -9,11 +9,11 @@
  int  v[  10 ] 'a'   0   'b'   0   0   0   0   0   0   0  ;
  int  matrix[  100 ];
  float  f =  2.5 ;
- int  pi =  0 ;
- int  to[  10 ];
+ int  a =  0 ;
+ int  t[  10 ];
  int  proto( );
  int  teste( );
- int  incn(  int   xis ,  int   n );
+ int  incn(  int   x ,  int   n );
  int  ola(  int   a );
 code  teste {
  d =  input ( int );

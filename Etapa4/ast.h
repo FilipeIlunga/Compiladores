@@ -21,9 +21,9 @@
 #define AST_GE            11
 #define AST_EQ            12
 #define AST_DIF           13 
-#define AST_OR            14
-#define AST_AND           15
-#define AST_NOT           16 
+#define AST_NOT           14 
+#define AST_OR            15
+#define AST_AND           16
 #define AST_IF            17
 #define AST_ELSE          18
 #define AST_WHILE         19
@@ -57,12 +57,11 @@
 
 typedef struct ast_node {
     int type;
-    int dataType;
+    int datatype;
     int lineNumber;
     HASH_NODE* symbol;
     struct ast_node* son[MAX_SONS];
 } AST;
-
 
 AST* astCreate(int type, HASH_NODE* symbol, AST* son0, AST* son1, AST* son2, AST* son3);
 void astPrint(AST* node, int level);

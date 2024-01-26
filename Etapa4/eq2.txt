@@ -1,0 +1,10 @@
+ char  a[  5 ] 'c'   0   0   0   0  ;
+ int  j =  5 ;
+ char  main(  int   b ,  int   c );
+ int  teste( );
+code  main {
+}
+code  teste {
+}
+code  a {
+}
