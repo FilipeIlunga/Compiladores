@@ -1,0 +1,17 @@
+ int  de =  5 ;
+ int  e =  2 ;
+ int  main( );
+ int  s(  int   x );
+code  main {
+while ( de  ==  5 )
+{
+ print ( 'a' );
+}
+ e =  main( );
+ if ( 1  >  2 )
+{
+}
+}
+code  s {
+ e =  5 ;
+}
